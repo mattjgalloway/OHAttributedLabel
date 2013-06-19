@@ -33,8 +33,8 @@
 #pragma mark - Text Alignment Convertion
 /////////////////////////////////////////////////////////////////////////////////////
 
-CTTextAlignment CTTextAlignmentFromUITextAlignment(UITextAlignment alignment);
-CTLineBreakMode CTLineBreakModeFromUILineBreakMode(UILineBreakMode lineBreakMode);
+CTTextAlignment CTTextAlignmentFromNSTextAlignment(NSTextAlignment alignment);
+CTLineBreakMode CTLineBreakModeFromNSLineBreakMode(NSLineBreakMode lineBreakMode);
 
 /////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Flipping Coordinates

@@ -32,47 +32,32 @@
 /////////////////////////////////////////////////////////////////////////////////////
 
 
-CTTextAlignment CTTextAlignmentFromUITextAlignment(UITextAlignment alignment)
+CTTextAlignment CTTextAlignmentFromNSTextAlignment(NSTextAlignment alignment)
 {
-    if (alignment == (UITextAlignment)kCTJustifiedTextAlignment)
+    if (alignment == (NSTextAlignment)kCTJustifiedTextAlignment)
     {
         /* special OOB value, so test it outside of the switch to avoid warning */
         return kCTJustifiedTextAlignment;
     }
 	switch (alignment)
     {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
-		case UITextAlignmentLeft: return kCTLeftTextAlignment;
-		case UITextAlignmentCenter: return kCTCenterTextAlignment;
-		case UITextAlignmentRight: return kCTRightTextAlignment;
-#else
 		case NSTextAlignmentLeft: return kCTLeftTextAlignment;
 		case NSTextAlignmentCenter: return kCTCenterTextAlignment;
 		case NSTextAlignmentRight: return kCTRightTextAlignment;
-#endif
 		default: return kCTNaturalTextAlignment;
 	}
 }
 
-CTLineBreakMode CTLineBreakModeFromUILineBreakMode(UILineBreakMode lineBreakMode)
+CTLineBreakMode CTLineBreakModeFromNSLineBreakMode(NSLineBreakMode lineBreakMode)
 {
 	switch (lineBreakMode)
     {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED < 60000
-		case UILineBreakModeWordWrap: return kCTLineBreakByWordWrapping;
-		case UILineBreakModeCharacterWrap: return kCTLineBreakByCharWrapping;
-		case UILineBreakModeClip: return kCTLineBreakByClipping;
-		case UILineBreakModeHeadTruncation: return kCTLineBreakByTruncatingHead;
-		case UILineBreakModeTailTruncation: return kCTLineBreakByTruncatingTail;
-		case UILineBreakModeMiddleTruncation: return kCTLineBreakByTruncatingMiddle;
-#else
 		case NSLineBreakByWordWrapping: return kCTLineBreakByWordWrapping;
 		case NSLineBreakByCharWrapping: return kCTLineBreakByCharWrapping;
 		case NSLineBreakByClipping: return kCTLineBreakByClipping;
 		case NSLineBreakByTruncatingHead: return kCTLineBreakByTruncatingHead;
 		case NSLineBreakByTruncatingTail: return kCTLineBreakByTruncatingTail;
 		case NSLineBreakByTruncatingMiddle: return kCTLineBreakByTruncatingMiddle;
-#endif
 		default: return 0;
 	}
 }

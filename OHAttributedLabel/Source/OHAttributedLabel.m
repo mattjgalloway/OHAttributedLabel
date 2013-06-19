@@ -618,22 +618,22 @@ NSDataDetector* sharedReusableDataDetector(NSTextCheckingTypes types)
                     if (!(lastLineRange.length == 0 && lastLineRange.location == 0) && lastLineRange.location + lastLineRange.length < (long)_attributedText.length) {
                         CTLineTruncationType truncationType;
                         NSUInteger truncationAttributePosition = (NSUInteger)lastLineRange.location;
-                        UILineBreakMode lineBreakMode = self.lineBreakMode;
+                        NSLineBreakMode lineBreakMode = self.lineBreakMode;
                         
                         // Multiple lines, only use UILineBreakModeTailTruncation. It's hard to do head and middle, so just do tail for now.
                         if (numberOfLines != 1) {
-                            lineBreakMode = UILineBreakModeTailTruncation;
+                            lineBreakMode = NSLineBreakByTruncatingTail;
                         }
                         
                         switch (lineBreakMode) {
-                            case UILineBreakModeHeadTruncation:
+                            case NSLineBreakByTruncatingHead:
                                 truncationType = kCTLineTruncationStart;
                                 break;
-                            case UILineBreakModeMiddleTruncation:
+                            case NSLineBreakByTruncatingMiddle:
                                 truncationType = kCTLineTruncationMiddle;
                                 truncationAttributePosition += (NSUInteger)(lastLineRange.length / 2);
                                 break;
-                            case UILineBreakModeTailTruncation:
+                            case NSLineBreakByTruncatingTail:
                             default:
                                 truncationType = kCTLineTruncationEnd;
                                 truncationAttributePosition += (NSUInteger)(lastLineRange.length - 1);
@@ -831,8 +831,8 @@ NSDataDetector* sharedReusableDataDetector(NSTextCheckingTypes types)
     {
         [mutAttrStr setTextColor:self.textColor];
     }
-	CTTextAlignment coreTextAlign = CTTextAlignmentFromUITextAlignment(self.textAlignment);
-	CTLineBreakMode coreTextLBMode = CTLineBreakModeFromUILineBreakMode(self.lineBreakMode);
+	CTTextAlignment coreTextAlign = CTTextAlignmentFromNSTextAlignment(self.textAlignment);
+	CTLineBreakMode coreTextLBMode = CTLineBreakModeFromNSLineBreakMode(self.lineBreakMode);
 	[mutAttrStr setTextAlignment:coreTextAlign lineBreakMode:coreTextLBMode];
     
 	self.attributedText = [NSAttributedString attributedStringWithAttributedString:mutAttrStr];
@@ -894,12 +894,12 @@ NSDataDetector* sharedReusableDataDetector(NSTextCheckingTypes types)
 	[super setTextColor:color]; // will call setNeedsDisplay too
 }
 
--(void)setTextAlignment:(UITextAlignment)alignment
+-(void)setTextAlignment:(NSTextAlignment)alignment
 {
     if (_attributedText)
     {
-        CTTextAlignment coreTextAlign = CTTextAlignmentFromUITextAlignment(alignment);
-        CTLineBreakMode coreTextLBMode = CTLineBreakModeFromUILineBreakMode(self.lineBreakMode);
+        CTTextAlignment coreTextAlign = CTTextAlignmentFromNSTextAlignment(alignment);
+        CTLineBreakMode coreTextLBMode = CTLineBreakModeFromNSLineBreakMode(self.lineBreakMode);
         NSMutableAttributedString* mutAS = [NSMutableAttributedString attributedStringWithAttributedString:_attributedText];
         [mutAS setTextAlignment:coreTextAlign lineBreakMode:coreTextLBMode];
         MRC_RELEASE(_attributedText);
@@ -908,12 +908,12 @@ NSDataDetector* sharedReusableDataDetector(NSTextCheckingTypes types)
 	[super setTextAlignment:alignment]; // will call setNeedsDisplay too
 }
 
--(void)setLineBreakMode:(UILineBreakMode)lineBreakMode
+-(void)setLineBreakMode:(NSLineBreakMode)lineBreakMode
 {
     if (_attributedText)
     {
-        CTTextAlignment coreTextAlign = CTTextAlignmentFromUITextAlignment(self.textAlignment);
-        CTLineBreakMode coreTextLBMode = CTLineBreakModeFromUILineBreakMode(lineBreakMode);
+        CTTextAlignment coreTextAlign = CTTextAlignmentFromNSTextAlignment(self.textAlignment);
+        CTLineBreakMode coreTextLBMode = CTLineBreakModeFromNSLineBreakMode(lineBreakMode);
         NSMutableAttributedString* mutAS = [NSMutableAttributedString attributedStringWithAttributedString:_attributedText];
         [mutAS setTextAlignment:coreTextAlign lineBreakMode:coreTextLBMode];
         MRC_RELEASE(_attributedText);
