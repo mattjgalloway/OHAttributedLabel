@@ -62,6 +62,7 @@ const int UITextAlignmentJustify = ((UITextAlignment)kCTJustifiedTextAlignment);
 	NSMutableArray* _customLinks;
 	CGPoint _touchStartPoint;
     UIGestureRecognizer *_gestureRecogniser;
+    CTFramesetterRef _measuringFramesetter;
 }
 @property(nonatomic, retain) NSTextCheckingResult* activeLink;
 -(NSTextCheckingResult*)linkAtCharacterIndex:(CFIndex)idx;
@@ -222,6 +223,10 @@ NSDataDetector* sharedReusableDataDetector(NSTextCheckingTypes types)
     if (!_attributedText || (self.automaticallyAddLinksForType == 0 && _customLinks.count == 0 && hasOHLinkAttribute == 0))
     {
         _attributedTextWithLinks = _attributedText;
+        if (_measuringFramesetter) {
+            CFRelease(_measuringFramesetter);
+            _measuringFramesetter = nil;
+        }
         return;
 	}
     
@@ -294,6 +299,10 @@ NSDataDetector* sharedReusableDataDetector(NSTextCheckingTypes types)
          }];
         
         _attributedTextWithLinks = [[NSAttributedString alloc] initWithAttributedString:mutAS];
+        if (_measuringFramesetter) {
+            CFRelease(_measuringFramesetter);
+            _measuringFramesetter = nil;
+        }
         
     } // @autoreleasepool
     
@@ -757,7 +766,12 @@ NSDataDetector* sharedReusableDataDetector(NSTextCheckingTypes types)
     } else {
         [self recomputeLinksInTextIfNeeded];
         if (_attributedTextWithLinks) {
-            return [_attributedTextWithLinks sizeConstrainedToSize:size maxLines:self.numberOfLines fitRange:NULL];
+            if (!_measuringFramesetter) {
+                _measuringFramesetter = CTFramesetterCreateWithAttributedString((BRIDGE_CAST CFAttributedStringRef)_attributedTextWithLinks);
+            }
+            
+            CGSize returnSize = [_attributedTextWithLinks sizeConstrainedToSize:size maxLines:self.numberOfLines fitRange:NULL framesetter:_measuringFramesetter];
+            return returnSize;
         } else {
             return CGSizeZero;
         }
