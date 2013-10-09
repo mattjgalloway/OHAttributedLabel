@@ -758,13 +758,12 @@ NSDataDetector* sharedReusableDataDetector(NSTextCheckingTypes types)
 			
             CFRange fullRunRange = CTRunGetStringRange(run);
             
+            CFIndex startActiveLinkInRun = (CFIndex)activeLinkRange.location - fullRunRange.location;
+            CFIndex endActiveLinkInRun = startActiveLinkInRun + (CFIndex)activeLinkRange.length;
+            
             CFRange inRunRange;
-            inRunRange.location = (CFIndex)activeLinkRange.location - fullRunRange.location;
-            inRunRange.length = MIN((CFIndex)activeLinkRange.length, fullRunRange.length);
-            if (inRunRange.location < 0) {
-                inRunRange.length += inRunRange.location;
-                inRunRange.location = 0;
-            }
+            inRunRange.location = MAX(startActiveLinkInRun, 0);
+            inRunRange.length = MIN(endActiveLinkInRun, fullRunRange.length);
             
             CGRect linkRunRect = CTRunGetTypographicBoundsForRangeAsRect(run, line, lineOrigins[lineIndex], inRunRange, ctx);
 			linkRunRect = CGRectIntegral(linkRunRect);		// putting the rect on pixel edges
