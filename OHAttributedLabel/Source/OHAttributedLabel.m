@@ -666,8 +666,6 @@ NSDataDetector* sharedReusableDataDetector(NSTextCheckingTypes types)
                         CFRelease(truncatedLine);
                         CFRelease(truncationLine);
                         CFRelease(truncationToken);
-                        [attributedTokenString release];
-                        [truncationString release];
                     } else {
                         CTLineDraw(line, ctx);
                     }
@@ -767,7 +765,7 @@ NSDataDetector* sharedReusableDataDetector(NSTextCheckingTypes types)
         [self recomputeLinksInTextIfNeeded];
         if (_attributedTextWithLinks) {
             if (!_measuringFramesetter) {
-                _measuringFramesetter = CTFramesetterCreateWithAttributedString((BRIDGE_CAST CFAttributedStringRef)_attributedTextWithLinks);
+                _measuringFramesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)_attributedTextWithLinks);
             }
             
             CGSize returnSize = [_attributedTextWithLinks sizeConstrainedToSize:size maxLines:self.numberOfLines fitRange:NULL framesetter:_measuringFramesetter];
