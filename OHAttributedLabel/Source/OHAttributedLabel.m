@@ -455,7 +455,7 @@ NSDataDetector* sharedReusableDataDetector(NSTextCheckingTypes types)
             
             if (_catchTouchesOnLinksOnTouchBegan)
             {
-                [self processActiveLink];
+                [self processActiveLinkAtPoint:pt];
             }
             
             // we're using activeLink to draw a highlight in -drawRect:
@@ -473,7 +473,7 @@ NSDataDetector* sharedReusableDataDetector(NSTextCheckingTypes types)
                 if (_activeLink && (NSEqualRanges(_activeLink.range,linkAtTouchesEnded.range) || closeToStart))
                 {
                     // Same link on touchEnded than the one on touchBegan, so trigger it
-                    [self processActiveLink];
+                    [self processActiveLinkAtPoint:pt];
                 }
             }
             
@@ -493,12 +493,12 @@ NSDataDetector* sharedReusableDataDetector(NSTextCheckingTypes types)
     }
 }
 
-- (void)processActiveLink
+- (void)processActiveLinkAtPoint:(CGPoint)point
 {
     NSTextCheckingResult* linkToOpen = _activeLink;
     
-    BOOL openLink = (self.delegate && [self.delegate respondsToSelector:@selector(attributedLabel:shouldFollowLink:)])
-    ? [self.delegate attributedLabel:self shouldFollowLink:linkToOpen] : YES;
+    BOOL openLink = (self.delegate && [self.delegate respondsToSelector:@selector(attributedLabel:shouldFollowLink:atPoint:)])
+    ? [self.delegate attributedLabel:self shouldFollowLink:linkToOpen atPoint:point] : YES;
     
     if (openLink)
     {
